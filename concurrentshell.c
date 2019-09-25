@@ -149,12 +149,24 @@ int lsh_execute(char **args)
  */
 char *lsh_read_line(void)
 {
-  char *line = NULL;
+  char *lines = NULL;
   ssize_t bufsize = 0; // have getline allocate a buffer for us
-  getline(&line, &bufsize, stdin);
-  return line;
+  getdelim(&lines, &bufsize, '$' , stdin);
+  return lines;
 }
-
+//to split the commands to single command.
+void split(char *lines)
+{
+	char *ptr;
+	char delim[] = "\n";
+	ptr=strtok(lines,delim);
+	while(ptr!=NULL)
+	{
+		printf("%s",ptr);
+		printf("\n");
+		ptr = strtok(NULL,delim);
+	}
+}
 #define LSH_TOK_BUFSIZE 64
 #define LSH_TOK_DELIM " \t\r\n\a"
 /**
@@ -207,6 +219,7 @@ void lsh_loop(void)
   do {
     printf("> ");
     line = lsh_read_line();
+    split(line);
     args = lsh_split_line(line);
     status = lsh_execute(args);
 
