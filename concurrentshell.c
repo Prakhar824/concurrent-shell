@@ -1,9 +1,3 @@
-/***************************************************************************//**
-  @file         main.c
-  @author       Stephen Brennan
-  @date         Thursday,  8 January 2015
-  @brief        LSH (Libstephen SHell)
-*******************************************************************************/
 
 #include <sys/wait.h>
 #include <sys/types.h>
@@ -164,7 +158,9 @@ void split(char *lines)
 	{
 		printf("%s",ptr);
 		printf("\n");
+		execute(ptr);
 		ptr = strtok(NULL,delim);
+		
 	}
 }
 #define LSH_TOK_BUFSIZE 64
@@ -207,6 +203,20 @@ char **lsh_split_line(char *line)
   return tokens;
 }
 
+// a function to execute all the commands.
+
+void execute(char* command)
+{
+	char **args;
+	int status;
+	args = lsh_split_line(command);
+    status = lsh_execute(args);
+
+    free(command);
+    free(args);	
+
+}
+
 /**
    @brief Loop getting input and executing it.
  */
@@ -220,11 +230,11 @@ void lsh_loop(void)
     printf("> ");
     line = lsh_read_line();
     split(line);
-    args = lsh_split_line(line);
+   /* args = lsh_split_line(line);
     status = lsh_execute(args);
 
     free(line);
-    free(args);
+    free(args);*/
   } while (status);
 }
 
