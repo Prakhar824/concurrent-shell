@@ -6,6 +6,9 @@
 #include <stdio.h>
 #include <string.h>
 
+
+int number=0;
+
 /*
   Function Declarations for builtin shell commands:
  */
@@ -163,13 +166,14 @@ char** split(char *lines)
 	{
 		s[i]=ptr;
 		
-		printf("%s",s[i]);
+		//printf("%s  %d",s[i],i);
 		i++;
-		printf("\n");
+		//printf("\n");
 		//execute(ptr);
 		ptr = strtok(NULL,delim);
 		
 	}
+number=i-1;
 return s;
 }
 #define LSH_TOK_BUFSIZE 64
@@ -234,19 +238,25 @@ void lsh_loop(void)
   char *line;
   char **args[10],**s;
   int status;
+  int len=0;
   
 
   do {
     printf("> ");
     line = lsh_read_line();
     s=split(line);
-    //printf("%s",s[0]);
-    args[0] = lsh_split_line(s[0]);
+   // printf("commands are %d",number);
+    /*args[0] = lsh_split_line(s[0]);
     args[1] = lsh_split_line(s[1]);
     args[2] = lsh_split_line(s[2]);
     status = lsh_execute(args[0]);
     status = lsh_execute(args[1]);
-    status = lsh_execute(args[2]);
+    status = lsh_execute(args[2]);*/
+    for(int i=0;i<number;i++)
+    {
+	args[i] = lsh_split_line(s[i]);
+        status = lsh_execute(args[i]);
+    }
 
    // free(line);
     //free(args);
