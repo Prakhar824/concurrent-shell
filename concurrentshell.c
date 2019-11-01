@@ -149,19 +149,28 @@ char *lsh_read_line(void)
   return lines;
 }
 //to split the commands to single command.
-void split(char *lines)
+char** split(char *lines)
 {
 	char *ptr;
+	//char *s[10];
+	char ** s = malloc(10 * sizeof(char*));
+	for (int i =0 ; i < 10; ++i)
+  	  s[i] = malloc(20 * sizeof(char));
+	int i=0;
 	char delim[] = "\n";
 	ptr=strtok(lines,delim);
 	while(ptr!=NULL)
 	{
-		printf("%s",ptr);
+		s[i]=ptr;
+		
+		printf("%s",s[i]);
+		i++;
 		printf("\n");
-		execute(ptr);
+		//execute(ptr);
 		ptr = strtok(NULL,delim);
 		
 	}
+return s;
 }
 #define LSH_TOK_BUFSIZE 64
 #define LSH_TOK_DELIM " \t\r\n\a"
@@ -205,7 +214,7 @@ char **lsh_split_line(char *line)
 
 // a function to execute all the commands.
 
-void execute(char* command)
+/*void execute(char* command)
 {
 	char **args;
 	int status;
@@ -215,7 +224,7 @@ void execute(char* command)
     free(command);
     free(args);	
 
-}
+}*/
 
 /**
    @brief Loop getting input and executing it.
@@ -223,18 +232,24 @@ void execute(char* command)
 void lsh_loop(void)
 {
   char *line;
-  char **args;
+  char **args[10],**s;
   int status;
+  
 
   do {
     printf("> ");
     line = lsh_read_line();
-    split(line);
-   /* args = lsh_split_line(line);
-    status = lsh_execute(args);
+    s=split(line);
+    //printf("%s",s[0]);
+    args[0] = lsh_split_line(s[0]);
+    args[1] = lsh_split_line(s[1]);
+    args[2] = lsh_split_line(s[2]);
+    status = lsh_execute(args[0]);
+    status = lsh_execute(args[1]);
+    status = lsh_execute(args[2]);
 
-    free(line);
-    free(args);*/
+   // free(line);
+    //free(args);
   } while (status);
 }
 
